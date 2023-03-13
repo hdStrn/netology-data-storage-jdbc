@@ -13,16 +13,13 @@ import static ru.netology.netologydatastoragejdbc.utils.SqlUtils.read;
 @RequiredArgsConstructor
 public class OrderDaoImpl implements OrderDao {
 
-    private final String scriptFileName = "scripts/select_product.sql";
+    private final String sqlScript = read("scripts/select_product.sql");
     private final NamedParameterJdbcTemplate template;
 
     @Override
     public List<String> getProductNameByCustomerName(String name) {
-        String sqlScript = read(scriptFileName);
-
         MapSqlParameterSource param = new MapSqlParameterSource("name", name);
 
-        return template.query(sqlScript, param,
-                (rs, rowNum) -> rs.getString("product_name"));
+        return template.queryForList(sqlScript, param, String.class);
     }
 }
