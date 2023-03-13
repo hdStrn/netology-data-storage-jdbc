@@ -13,7 +13,7 @@ import static ru.netology.netologydatastoragejdbc.utils.SqlUtils.read;
 @RequiredArgsConstructor
 public class OrderDaoImpl implements OrderDao {
 
-    private final String scriptFileName = "select_product.sql";
+    private final String scriptFileName = "scripts/select_product.sql";
     private final NamedParameterJdbcTemplate template;
 
     @Override
