@@ -1,28 +1,28 @@
 package ru.netology.netologydatastoragejdbc.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.netology.netologydatastoragejdbc.entity.Order;
 
 import java.util.List;
-
-import static ru.netology.netologydatastoragejdbc.utils.SqlUtils.read;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class OrderDaoImpl implements OrderDao {
 
-    private final String scriptFileName = "select_product.sql";
-    private final NamedParameterJdbcTemplate template;
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     @Override
     public List<String> getProductNameByCustomerName(String name) {
-        String sqlScript = read(scriptFileName);
-
-        MapSqlParameterSource param = new MapSqlParameterSource("name", name);
-
-        return template.query(sqlScript, param,
-                (rs, rowNum) -> rs.getString("product_name"));
+        return entityManager
+                .createQuery("select o from Order o join Customer c where o.customer.name = :name", Order.class)
+                .setParameter("name", name)
+                .getResultList().stream()
+                .map(Order::getProductName)
+                .collect(Collectors.toList());
     }
 }

@@ -17,7 +17,7 @@ public class OrderController {
 
     @GetMapping("/fetch-product")
     @ResponseBody
-    public String getProductNameByCustomerName(@RequestParam(value = "name") String name) {
+    public String getProductNameByCustomerName(@RequestParam String name) {
         return orderService.getProductNameByCustomerName(name);
     }
 
